@@ -1,17 +1,39 @@
 <!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Елена Глинская — интерактив</title>
-<style>body{font-family:Calibri,Arial,sans-serif;background:#F7F1E5;color:#2B2024;max-width:760px;margin:0 auto;padding:24px}h1,h2{font-family:Georgia,serif;color:#6B1E2E}
-.tl{display:flex;flex-wrap:wrap;gap:8px}button{font:inherit;padding:8px 14px;border:2px solid #B8893B;background:#fff;border-radius:8px;cursor:pointer}button.on{background:#6B1E2E;color:#fff;border-color:#6B1E2E}
-.card{background:#fff;border-left:6px solid #B8893B;padding:14px 18px;margin:14px 0;border-radius:6px;min-height:70px}.ok{color:#1a7f37}.bad{color:#b42318}</style></head><body>
-<h1>Елена Глинская: 1533–1538</h1><h2>Лента событий</h2><div class="tl" id="tl"></div><div class="card" id="ev">Выберите дату.</div>
-<h2>Мини-викторина</h2><div id="q"></div><p id="sc"></p>
+<style>
+:root{--navy:#12263A;--teal:#2A9D8F;--sand:#F4EFE6;--coral:#E76F51;--ink:#1c2b36}
+*{box-sizing:border-box}body{font-family:Calibri,Arial,sans-serif;background:var(--sand);color:var(--ink);margin:0}
+header{background:var(--navy);color:#fff;padding:28px 20px 0;text-align:center}header h1{font-family:Georgia,serif;margin:0 0 4px;font-size:30px}header p{margin:0;color:#9fd8d0}
+main{max-width:800px;margin:0 auto;padding:20px}h2{font-family:Georgia,serif;color:var(--navy);border-bottom:3px solid var(--teal);padding-bottom:6px}
+.tl{display:flex;flex-wrap:wrap;gap:8px}button{font:inherit;padding:8px 14px;border:2px solid var(--teal);background:#fff;color:var(--navy);border-radius:999px;cursor:pointer}
+button:hover{background:#e3f4f1}button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.card{background:#fff;border-left:6px solid var(--teal);padding:14px 18px;margin:14px 0;border-radius:8px;box-shadow:0 1px 4px #0001}
+#ev{display:flex;gap:16px;align-items:center;min-height:96px}#ev svg{flex:none;width:72px;height:72px}
+.q button{border-radius:8px;margin:4px 6px 0 0}.q button.right{background:var(--teal);color:#fff;border-color:var(--teal)}.q button.wrong{background:var(--coral);color:#fff;border-color:var(--coral)}
+.bar{height:10px;background:#d9d3c7;border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--coral);transition:width .3s}
+#sc{font-weight:bold;color:var(--navy)}
+</style></head><body>
+<header><h1>Елена Глинская: 1533–1538</h1><p>Боярское направление и социальные противоречия</p>
+<svg viewBox="0 0 800 70" width="100%" height="70" preserveAspectRatio="xMidYMax slice"><path d="M0 70V50h40V35h20V50h40V30h20V50h60V40h30V50h50V25h20V50h40V35h20V50h60V28h20V50h50V38h30V50h60V32h20V50h50V42h30V50h60V30h20V50h40V38h20V50h50V70z" fill="#2A9D8F"/></svg></header>
+<main>
+<h2>Лента событий</h2><div class="tl" id="tl"></div><div class="card" id="ev"><span>Выбери дату, чтобы увидеть событие.</span></div>
+<h2>Викторина</h2><div class="bar"><i id="pb"></i></div><div id="q"></div><p id="sc"></p>
+</main>
 <script>
-const E=[["1526","Брак Василия III и Елены Глинской."],["1530","Рождение Ивана, будущего Ивана IV."],["Дек. 1533","Смерть Василия III. Начало регентства Елены."],["1533–34","Арест Юрия Дмитровского; он умер в заточении."],["1534","Бельский и Ляцкий уходят в Литву; арестован М. Глинский."],["1535","Денежная реформа; строительство стены Китай-города."],["1534–37","Война с Литвой, перемирие в 1537."],["1537","Мятеж Андрея Старицкого, арест."],["Апр. 1538","Смерть Елены; начало боярского правления."]];
+const I={crown:'<path d="M10 52l6-28 14 14 6-20 6 20 14-14 6 28z" fill="#E76F51"/><rect x="10" y="54" width="52" height="8" fill="#12263A"/>',
+coin:'<circle cx="36" cy="36" r="26" fill="#E9C46A" stroke="#12263A" stroke-width="4"/><path d="M36 20v32M28 30h16M28 42h16" stroke="#12263A" stroke-width="4"/>',
+wall:'<path d="M6 60V28h10v-8h8v8h8v-8h8v8h8v-8h8v8h10v32z" fill="#2A9D8F" stroke="#12263A" stroke-width="3"/><rect x="30" y="42" width="12" height="18" fill="#12263A"/>',
+sword:'<path d="M36 6l6 36H30z" fill="#9fb3c8" stroke="#12263A" stroke-width="3"/><rect x="22" y="42" width="28" height="6" fill="#12263A"/><rect x="33" y="48" width="6" height="16" fill="#E76F51"/>',
+chain:'<rect x="8" y="26" width="28" height="20" rx="10" fill="none" stroke="#12263A" stroke-width="6"/><rect x="36" y="26" width="28" height="20" rx="10" fill="none" stroke="#E76F51" stroke-width="6"/>',
+flag:'<path d="M18 8v58" stroke="#12263A" stroke-width="5"/><path d="M18 10h38l-10 12 10 12H18z" fill="#2A9D8F"/>'};
+const E=[["1526","Брак Василия III и Елены Глинской.","crown"],["1530","Рождение Ивана, будущего Ивана IV.","crown"],["Дек. 1533","Смерть Василия III. Начало регентства Елены.","flag"],["1533–34","Арест Юрия Дмитровского; он умер в заточении.","chain"],["1534","Бельский и Ляцкий уходят в Литву; арестован М. Глинский.","chain"],["1535","Денежная реформа: единая монета.","coin"],["1535","Строительство стены Китай-города.","wall"],["1534–37","Война с Литвой, перемирие в 1537.","sword"],["1537","Мятеж Андрея Старицкого, арест.","chain"],["Апр. 1538","Смерть Елены; начало боярского правления.","flag"]];
 const tl=document.getElementById("tl"),ev=document.getElementById("ev");
-E.forEach(([d,t],i)=>{const b=document.createElement("button");b.textContent=d;b.onclick=()=>{[...tl.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");ev.textContent=d+": "+t};tl.appendChild(b)});
-const Q=[["Сколько лет было Ивану IV при смерти отца?",["3","7","10"],0],["Кто был фаворитом Елены?",["Шуйский","Овчина-Телепнёв-Оболенский","Бельский"],1],["Какая реформа проведена в 1535 г.?",["Губная","Земская","Денежная"],2],["Что последовало за смертью Елены?",["Боярское правление","Опричнина","Смута"],0]];
+E.forEach(([d,t,ic])=>{const b=document.createElement("button");b.textContent=d;b.onclick=()=>{[...tl.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");
+ev.innerHTML='<svg viewBox="0 0 72 72">'+I[ic]+'</svg><span><b>'+d+'</b><br>'+t+'</span>'};tl.appendChild(b)});
+const Q=[["Сколько лет было Ивану IV при смерти отца?",["3","7","10"],0],["Кто был фаворитом Елены?",["Шуйский","Овчина-Телепнёв-Оболенский","Бельский"],1],["Какая реформа проведена в 1535 г.?",["Губная","Земская","Денежная"],2],["Что последовало за смертью Елены?",["Боярское правление","Опричнина","Смута"],0],["В каком году Елена стала регентшей?",["1530","1533","1538"],1],["Кто поднял мятеж в 1537 г.?",["Юрий Дмитровский","Андрей Старицкий","Михаил Глинский"],1],["Куда ушли Бельский и Ляцкий?",["В Крым","В Литву","В Казань"],1],["Что построили в Москве в 1535 г.?",["Кремлёвские соборы","Стену Китай-города","Новый Кремль"],1]];
 let s=0,n=0;const q=document.getElementById("q");
-Q.forEach(([t,o,a])=>{const d=document.createElement("div");d.className="card";d.innerHTML="<b>"+t+"</b><br>";
+Q.forEach(([t,o,a])=>{const d=document.createElement("div");d.className="card q";d.innerHTML="<b>"+t+"</b><br>";
 o.forEach((x,i)=>{const b=document.createElement("button");b.textContent=x;b.onclick=()=>{if(d.dataset.done)return;d.dataset.done=1;n++;
-const r=i==a;if(r)s++;b.className="on";d.insertAdjacentHTML("beforeend","<p class='"+(r?"ok":"bad")+"'>"+(r?"Верно":"Неверно: "+o[a])+"</p>");
-document.getElementById("sc").textContent="Результат: "+s+" из "+Q.length+(n==Q.length?" — готово":"")};d.appendChild(b)});q.appendChild(d)});
+if(i==a){s++;b.className="right"}else{b.className="wrong";d.children[a+2].className="right"}
+document.getElementById("pb").style.width=n/Q.length*100+"%";
+document.getElementById("sc").textContent="Результат: "+s+" из "+Q.length+(n==Q.length?(s>=7?" — отлично!":s>=5?" — хорошо":" — стоит повторить"):"")};d.appendChild(b)});q.appendChild(d)});
 </script></body></html>
