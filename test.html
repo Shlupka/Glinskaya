@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Елена Глинская — интерактив</title>
+<style>body{font-family:Calibri,Arial,sans-serif;background:#F7F1E5;color:#2B2024;max-width:760px;margin:0 auto;padding:24px}h1,h2{font-family:Georgia,serif;color:#6B1E2E}
+.tl{display:flex;flex-wrap:wrap;gap:8px}button{font:inherit;padding:8px 14px;border:2px solid #B8893B;background:#fff;border-radius:8px;cursor:pointer}button.on{background:#6B1E2E;color:#fff;border-color:#6B1E2E}
+.card{background:#fff;border-left:6px solid #B8893B;padding:14px 18px;margin:14px 0;border-radius:6px;min-height:70px}.ok{color:#1a7f37}.bad{color:#b42318}</style></head><body>
+<h1>Елена Глинская: 1533–1538</h1><h2>Лента событий</h2><div class="tl" id="tl"></div><div class="card" id="ev">Выберите дату.</div>
+<h2>Мини-викторина</h2><div id="q"></div><p id="sc"></p>
+<script>
+const E=[["1526","Брак Василия III и Елены Глинской."],["1530","Рождение Ивана, будущего Ивана IV."],["Дек. 1533","Смерть Василия III. Начало регентства Елены."],["1533–34","Арест Юрия Дмитровского; он умер в заточении."],["1534","Бельский и Ляцкий уходят в Литву; арестован М. Глинский."],["1535","Денежная реформа; строительство стены Китай-города."],["1534–37","Война с Литвой, перемирие в 1537."],["1537","Мятеж Андрея Старицкого, арест."],["Апр. 1538","Смерть Елены; начало боярского правления."]];
+const tl=document.getElementById("tl"),ev=document.getElementById("ev");
+E.forEach(([d,t],i)=>{const b=document.createElement("button");b.textContent=d;b.onclick=()=>{[...tl.children].forEach(x=>x.classList.remove("on"));b.classList.add("on");ev.textContent=d+": "+t};tl.appendChild(b)});
+const Q=[["Сколько лет было Ивану IV при смерти отца?",["3","7","10"],0],["Кто был фаворитом Елены?",["Шуйский","Овчина-Телепнёв-Оболенский","Бельский"],1],["Какая реформа проведена в 1535 г.?",["Губная","Земская","Денежная"],2],["Что последовало за смертью Елены?",["Боярское правление","Опричнина","Смута"],0]];
+let s=0,n=0;const q=document.getElementById("q");
+Q.forEach(([t,o,a])=>{const d=document.createElement("div");d.className="card";d.innerHTML="<b>"+t+"</b><br>";
+o.forEach((x,i)=>{const b=document.createElement("button");b.textContent=x;b.onclick=()=>{if(d.dataset.done)return;d.dataset.done=1;n++;
+const r=i==a;if(r)s++;b.className="on";d.insertAdjacentHTML("beforeend","<p class='"+(r?"ok":"bad")+"'>"+(r?"Верно":"Неверно: "+o[a])+"</p>");
+document.getElementById("sc").textContent="Результат: "+s+" из "+Q.length+(n==Q.length?" — готово":"")};d.appendChild(b)});q.appendChild(d)});
+</script></body></html>
